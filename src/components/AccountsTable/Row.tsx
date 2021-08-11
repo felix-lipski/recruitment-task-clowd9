@@ -11,7 +11,7 @@ import {
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-import { Account } from "../types";
+import { Account } from "../../types";
 
 const AccountRow: React.FC<{ account: Account }> = ({ account }) => {
   const [open, setOpen] = useState(false);

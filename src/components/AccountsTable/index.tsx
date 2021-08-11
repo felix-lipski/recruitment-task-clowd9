@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -9,12 +9,17 @@ import {
   TablePagination,
 } from "@material-ui/core";
 
-import { Account } from "../types";
-import AccountRow from "./AccountRow";
+import { Account } from "../../types";
+import AccountRow from "./Row";
+import { sortBy } from "./sorting";
+import { SortableHeadCell } from "./Sortable";
 
 const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [ascending, setAscending] = useState(true);
+  const [by, setBy] = useState<keyof Account>("firstName");
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -30,19 +35,36 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
     setPage(newPage);
   };
 
+  useEffect(() => console.log(by), [by]);
+
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Name and Surname</TableCell>
-            <TableCell>Position</TableCell>
-            <TableCell>Username</TableCell>
+            <SortableHeadCell
+              content="Name and Surname"
+              name="firstName"
+              bySetter={setBy}
+              ascendingSetter={setAscending}
+            />
+            <SortableHeadCell
+              content="Position"
+              name="accountType"
+              bySetter={setBy}
+              ascendingSetter={setAscending}
+            />
+            <SortableHeadCell
+              content="Username"
+              name="userName"
+              bySetter={setBy}
+              ascendingSetter={setAscending}
+            />
             <TableCell>Permissions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {accounts
+          {sortBy(by, ascending, accounts)
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((acc) => (
               <AccountRow account={acc} key={acc.id} />
