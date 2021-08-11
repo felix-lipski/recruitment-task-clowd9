@@ -11,15 +11,14 @@ import {
 
 import { Account } from "../../types";
 import AccountRow from "./Row";
-import { sortBy } from "./sorting";
-import { SortableHeadCell } from "./Sortable";
+import { SortableHeadCell, sortBy } from "./sorting";
 
 const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [ascending, setAscending] = useState(true);
-  const [by, setBy] = useState<keyof Account>("firstName");
+  const [sortKeys, setSortKeys] = useState<Array<keyof Account>>(["firstName"]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -35,7 +34,7 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
     setPage(newPage);
   };
 
-  useEffect(() => console.log(by), [by]);
+  useEffect(() => console.log(sortKeys));
 
   return (
     <TableContainer>
@@ -44,27 +43,30 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
           <TableRow>
             <SortableHeadCell
               content="Name and Surname"
-              name="firstName"
-              bySetter={setBy}
+              sortKeys={["firstName", "lastName"]}
+              currSortKeys={sortKeys}
+              sortKeysSetter={setSortKeys}
               ascendingSetter={setAscending}
             />
             <SortableHeadCell
               content="Position"
-              name="accountType"
-              bySetter={setBy}
+              sortKeys={["accountType"]}
+              currSortKeys={sortKeys}
+              sortKeysSetter={setSortKeys}
               ascendingSetter={setAscending}
             />
             <SortableHeadCell
               content="Username"
-              name="userName"
-              bySetter={setBy}
+              sortKeys={["userName"]}
+              currSortKeys={sortKeys}
+              sortKeysSetter={setSortKeys}
               ascendingSetter={setAscending}
             />
             <TableCell>Permissions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortBy(by, ascending, accounts)
+          {sortBy(sortKeys, ascending, accounts)
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((acc) => (
               <AccountRow account={acc} key={acc.id} />
