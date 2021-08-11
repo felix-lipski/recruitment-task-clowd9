@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
-import { StoreState } from "./types";
-import { fakeGetAccounts } from "./redux/actions";
+import { StoreState } from "../types";
+import { fakeGetAccounts } from "../redux/actions";
+import AccountsTable from "./AccountsTable";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const App: React.FC = () => {
     dispatch(fakeGetAccounts());
   }, [dispatch, accounts]);
 
-  return <h1>Hello World !</h1>;
+  return <AccountsTable accounts={accounts} />;
 };
 
 export default App;
