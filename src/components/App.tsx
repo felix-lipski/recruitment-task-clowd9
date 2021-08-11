@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Container } from "@material-ui/core";
 
 import { StoreState } from "../types";
 import { fakeGetAccounts } from "../redux/actions";
@@ -10,11 +11,14 @@ const App: React.FC = () => {
   const accounts = useSelector((state: StoreState) => state.accounts);
 
   useEffect(() => {
-    console.log(accounts);
     dispatch(fakeGetAccounts());
-  }, [dispatch, accounts]);
+  }, [dispatch]);
 
-  return <AccountsTable accounts={accounts} />;
+  return (
+    <Container maxWidth="md">
+      <AccountsTable accounts={accounts} />
+    </Container>
+  );
 };
 
 export default App;

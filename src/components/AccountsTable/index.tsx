@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
   TablePagination,
+  Paper,
 } from "@material-ui/core";
 
 import { Account } from "../../types";
@@ -34,56 +35,56 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
     setPage(newPage);
   };
 
-  useEffect(() => console.log(sortKeys));
-
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <SortableHeadCell
-              content="Name and Surname"
-              sortKeys={["firstName", "lastName"]}
-              currSortKeys={sortKeys}
-              sortKeysSetter={setSortKeys}
-              ascendingSetter={setAscending}
-            />
-            <SortableHeadCell
-              content="Position"
-              sortKeys={["accountType"]}
-              currSortKeys={sortKeys}
-              sortKeysSetter={setSortKeys}
-              ascendingSetter={setAscending}
-            />
-            <SortableHeadCell
-              content="Username"
-              sortKeys={["userName"]}
-              currSortKeys={sortKeys}
-              sortKeysSetter={setSortKeys}
-              ascendingSetter={setAscending}
-            />
-            <TableCell>Permissions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sortBy(sortKeys, ascending, accounts)
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((acc) => (
-              <AccountRow account={acc} key={acc.id} />
-            ))}
-        </TableBody>
-      </Table>
+    <Paper>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <SortableHeadCell
+                content="Name and Surname"
+                sortKeys={["firstName", "lastName"]}
+                currSortKeys={sortKeys}
+                sortKeysSetter={setSortKeys}
+                ascendingSetter={setAscending}
+              />
+              <SortableHeadCell
+                content="Position"
+                sortKeys={["accountType"]}
+                currSortKeys={sortKeys}
+                sortKeysSetter={setSortKeys}
+                ascendingSetter={setAscending}
+              />
+              <SortableHeadCell
+                content="Username"
+                sortKeys={["userName"]}
+                currSortKeys={sortKeys}
+                sortKeysSetter={setSortKeys}
+                ascendingSetter={setAscending}
+              />
+              <TableCell>Permissions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {sortBy(sortKeys, ascending, accounts)
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((acc) => (
+                <AccountRow account={acc} key={acc.id} />
+              ))}
+          </TableBody>
+        </Table>
 
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={accounts.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          component="div"
+          count={accounts.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </TableContainer>
+    </Paper>
   );
 };
 

@@ -7,18 +7,21 @@ import {
   ListItemText,
   Collapse,
   IconButton,
+  Box,
 } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 import { Account } from "../../types";
+import { useRowStyles } from "./style";
 
 const AccountRow: React.FC<{ account: Account }> = ({ account }) => {
+  const classes = useRowStyles();
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <TableRow>
+      <TableRow className={classes.normalRow}>
         <TableCell>
           {account.firstName} {account.lastName}
         </TableCell>
@@ -34,7 +37,7 @@ const AccountRow: React.FC<{ account: Account }> = ({ account }) => {
           )}
         </TableCell>
       </TableRow>
-      <TableRow>
+      <TableRow className={classes.permissionsRow}>
         <TableCell
           style={{
             padding: 0,
@@ -42,13 +45,15 @@ const AccountRow: React.FC<{ account: Account }> = ({ account }) => {
           colSpan={4}
         >
           <Collapse in={open} timeout="auto" collapsedSize="0" unmountOnExit>
-            <List>
-              {account.permissions.map((permission: string) => (
-                <ListItem key={permission}>
-                  <ListItemText primary={permission} />
-                </ListItem>
-              ))}
-            </List>
+            <Box marginLeft="75%">
+              <List>
+                {account.permissions.map((permission: string) => (
+                  <ListItem key={permission}>
+                    <ListItemText primary={permission} />
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           </Collapse>
         </TableCell>
       </TableRow>
