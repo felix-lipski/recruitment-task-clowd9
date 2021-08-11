@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 
 import { Account } from "../types";
+import AccountRow from "./AccountRow";
 
 const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
   const [page, setPage] = useState(0);
@@ -44,14 +45,7 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
           {accounts
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((acc) => (
-              <TableRow key={acc.id}>
-                <TableCell align="left">
-                  {acc.firstName} {acc.lastName}
-                </TableCell>
-                <TableCell>{acc.accountType}</TableCell>
-                <TableCell>{acc.userName}</TableCell>
-                <TableCell>{acc.permissions.length > 0 && "v"}</TableCell>
-              </TableRow>
+              <AccountRow account={acc} key={acc.id} />
             ))}
         </TableBody>
       </Table>
