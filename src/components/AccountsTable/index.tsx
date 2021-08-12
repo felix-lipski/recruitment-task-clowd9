@@ -93,6 +93,8 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
           <FilterPopover
             nameFilterSetter={setNameFilter}
             accountTypeFilterSetter={setAccountTypeFilter}
+            nameFilter={nameFilter}
+            accountTypeFilter={accountTypeFilter}
           />
           <TablePagination
             rowsPerPageOptions={[5, 10, 15]}

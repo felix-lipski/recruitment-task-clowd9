@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { TextField, Popover, Button } from "@material-ui/core";
+import { TextField, Popover, Button, Typography } from "@material-ui/core";
 
 import { useFilterStyles } from "./style";
 
 const FilterPopover: React.FC<{
+  nameFilter: string, accountTypeFilter: string,
   nameFilterSetter: React.Dispatch<React.SetStateAction<string>>;
   accountTypeFilterSetter: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ nameFilterSetter, accountTypeFilterSetter }) => {
+}> = ({ nameFilter, accountTypeFilter, nameFilterSetter, accountTypeFilterSetter }) => {
   const classes = useFilterStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -46,17 +47,20 @@ const FilterPopover: React.FC<{
         }}
       >
         <form className={classes.form} noValidate autoComplete="off">
+          <Typography className={classes.typography}>Filter by:</Typography>
           <TextField
             id="name-field"
-            label="by Name"
+            label="Name"
             variant="outlined"
             onChange={(e) => nameFilterSetter(e.target.value)}
+            value={nameFilter}
           />
           <TextField
             id="accountType-field"
-            label="by Position"
+            label="Position"
             variant="outlined"
             onChange={(e) => accountTypeFilterSetter(e.target.value)}
+            value={accountTypeFilter}
           />
         </form>
       </Popover>
