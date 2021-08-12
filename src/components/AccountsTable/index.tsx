@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 
 import { Account } from "../../types";
-import { useHeadStyles } from "./style"
+import { useHeadStyles } from "./style";
 import { SortableHeadCell, sortBy } from "./sorting";
 import AccountRow from "./Row";
 import FilterPopover from "./FilterPopover";
@@ -42,6 +42,16 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
   ) => {
     setPage(newPage);
   };
+
+  const filteredSortedAccounts = sortBy(sortKeys, ascending, accounts)
+    .filter((x) =>
+      `${x.firstName} ${x.lastName}`
+        .toUpperCase()
+        .includes(nameFilter.toUpperCase())
+    )
+    .filter((x) =>
+      x.accountType.toUpperCase().includes(accountTypeFilter.toUpperCase())
+    );
 
   return (
     <Paper>
@@ -74,17 +84,7 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortBy(sortKeys, ascending, accounts)
-              .filter((x) =>
-                `${x.firstName} ${x.lastName}`
-                  .toUpperCase()
-                  .includes(nameFilter.toUpperCase())
-              )
-              .filter((x) =>
-                x.accountType
-                  .toUpperCase()
-                  .includes(accountTypeFilter.toUpperCase())
-              )
+            {filteredSortedAccounts
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((acc) => (
                 <AccountRow account={acc} key={acc.id} />
@@ -94,15 +94,16 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
 
         <Box display="flex" justifyContent="space-between" margin={2}>
           <FilterPopover
-            nameFilterSetter={setNameFilter}
-            accountTypeFilterSetter={setAccountTypeFilter}
+            pageSetter={setPage}
             nameFilter={nameFilter}
+            nameFilterSetter={setNameFilter}
             accountTypeFilter={accountTypeFilter}
+            accountTypeFilterSetter={setAccountTypeFilter}
           />
           <TablePagination
             rowsPerPageOptions={[5, 10, 15]}
             component="div"
-            count={accounts.length}
+            count={filteredSortedAccounts.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

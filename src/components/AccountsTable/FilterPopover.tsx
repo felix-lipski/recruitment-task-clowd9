@@ -4,10 +4,18 @@ import { TextField, Popover, Button, Typography } from "@material-ui/core";
 import { useFilterStyles } from "./style";
 
 const FilterPopover: React.FC<{
-  nameFilter: string, accountTypeFilter: string,
+  pageSetter: React.Dispatch<React.SetStateAction<number>>;
+  nameFilter: string;
   nameFilterSetter: React.Dispatch<React.SetStateAction<string>>;
+  accountTypeFilter: string;
   accountTypeFilterSetter: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ nameFilter, accountTypeFilter, nameFilterSetter, accountTypeFilterSetter }) => {
+}> = ({
+  pageSetter,
+  nameFilter,
+  nameFilterSetter,
+  accountTypeFilter,
+  accountTypeFilterSetter,
+}) => {
   const classes = useFilterStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -52,14 +60,20 @@ const FilterPopover: React.FC<{
             id="name-field"
             label="Name"
             variant="outlined"
-            onChange={(e) => nameFilterSetter(e.target.value)}
+            onChange={(e) => {
+              nameFilterSetter(e.target.value);
+              pageSetter(0);
+            }}
             value={nameFilter}
           />
           <TextField
             id="accountType-field"
             label="Position"
             variant="outlined"
-            onChange={(e) => accountTypeFilterSetter(e.target.value)}
+            onChange={(e) => {
+              accountTypeFilterSetter(e.target.value);
+              pageSetter(0);
+            }}
             value={accountTypeFilter}
           />
         </form>
