@@ -13,7 +13,8 @@ import {
 
 import { Account } from "../../types";
 import { useHeadStyles } from "./style";
-import { SortableHeadCell, sortBy } from "./sorting";
+import filterAndSort from "./filterAndSort";
+import SortableHeadCell from "./SortableHeadCell";
 import AccountRow from "./Row";
 import FilterPopover from "./FilterPopover";
 
@@ -43,15 +44,13 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
     setPage(newPage);
   };
 
-  const filteredSortedAccounts = sortBy(sortKeys, ascending, accounts)
-    .filter((x) =>
-      `${x.firstName} ${x.lastName}`
-        .toUpperCase()
-        .includes(nameFilter.toUpperCase())
-    )
-    .filter((x) =>
-      x.accountType.toUpperCase().includes(accountTypeFilter.toUpperCase())
-    );
+  const filteredSortedAccounts = filterAndSort(
+    accounts,
+    sortKeys,
+    ascending,
+    nameFilter,
+    accountTypeFilter
+  );
 
   return (
     <Paper>
