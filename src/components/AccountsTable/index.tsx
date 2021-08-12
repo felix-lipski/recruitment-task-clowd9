@@ -8,11 +8,13 @@ import {
   TableRow,
   TablePagination,
   Paper,
+  Box,
 } from "@material-ui/core";
 
 import { Account } from "../../types";
-import AccountRow from "./Row";
 import { SortableHeadCell, sortBy } from "./sorting";
+import AccountRow from "./Row";
+import FilterPopover from "./FilterPopover";
 
 const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
   const [page, setPage] = useState(0);
@@ -20,6 +22,9 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
 
   const [ascending, setAscending] = useState(true);
   const [sortKeys, setSortKeys] = useState<Array<keyof Account>>(["firstName"]);
+
+  const [nameFilter, setNameFilter] = useState("");
+  const [accountTypeFilter, setAccountTypeFilter] = useState("");
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -67,6 +72,16 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
           </TableHead>
           <TableBody>
             {sortBy(sortKeys, ascending, accounts)
+              .filter((x) =>
+                `${x.firstName} ${x.lastName}`
+                  .toUpperCase()
+                  .includes(nameFilter.toUpperCase())
+              )
+              .filter((x) =>
+                x.accountType
+                  .toUpperCase()
+                  .includes(accountTypeFilter.toUpperCase())
+              )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((acc) => (
                 <AccountRow account={acc} key={acc.id} />
@@ -74,15 +89,21 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
           </TableBody>
         </Table>
 
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 15]}
-          component="div"
-          count={accounts.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <Box display="flex" justifyContent="space-between" margin={2}>
+          <FilterPopover
+            nameFilterSetter={setNameFilter}
+            accountTypeFilterSetter={setAccountTypeFilter}
+          />
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 15]}
+            component="div"
+            count={accounts.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Box>
       </TableContainer>
     </Paper>
   );
