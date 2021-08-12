@@ -8,6 +8,7 @@ import {
   Collapse,
   IconButton,
   Box,
+  Paper
 } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -21,7 +22,7 @@ const AccountRow: React.FC<{ account: Account }> = ({ account }) => {
 
   return (
     <>
-      <TableRow className={classes.normalRow}>
+      <TableRow hover className={classes.normalRow}>
         <TableCell>
           {account.firstName} {account.lastName}
         </TableCell>
@@ -48,9 +49,13 @@ const AccountRow: React.FC<{ account: Account }> = ({ account }) => {
             <Box marginLeft="75%">
               <List>
                 {account.permissions.map((permission: string) => (
-                  <ListItem key={permission}>
-                    <ListItemText primary={permission} />
-                  </ListItem>
+                  <Box margin={1} key={permission}>
+                    <Paper>
+                      <ListItem key={permission}>
+                        <ListItemText primary={permission} />
+                      </ListItem>
+                    </Paper>
+                  </Box>
                 ))}
               </List>
             </Box>

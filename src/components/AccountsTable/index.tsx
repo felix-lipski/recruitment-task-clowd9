@@ -12,11 +12,14 @@ import {
 } from "@material-ui/core";
 
 import { Account } from "../../types";
+import { useHeadStyles } from "./style"
 import { SortableHeadCell, sortBy } from "./sorting";
 import AccountRow from "./Row";
 import FilterPopover from "./FilterPopover";
 
 const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
+  const classes = useHeadStyles();
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -44,7 +47,7 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
     <Paper>
       <TableContainer>
         <Table>
-          <TableHead>
+          <TableHead className={classes.tableHead}>
             <TableRow>
               <SortableHeadCell
                 content="Name and Surname"
