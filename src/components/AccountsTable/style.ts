@@ -3,9 +3,9 @@ import { makeStyles, Theme } from "@material-ui/core";
 export const useHeadStyles = makeStyles((theme: Theme) => ({
   tableHead: {
     "&": {
-      boxShadow: theme.shadows[2]
+      boxShadow: theme.shadows[1],
     },
-  }
+  },
 }));
 
 export const useRowStyles = makeStyles((theme: Theme) => ({

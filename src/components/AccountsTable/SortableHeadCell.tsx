@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TableCell, TableSortLabel } from "@material-ui/core";
 
-import { Account } from "../../types";
+import { Account } from "../../common/types";
 
 const SortableHeadCell: React.FC<{
   currSortKeys: Array<keyof Account>;

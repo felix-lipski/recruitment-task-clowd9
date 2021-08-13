@@ -11,9 +11,9 @@ import {
   Box,
 } from "@material-ui/core";
 
-import { Account } from "../../types";
+import { Account, FilterTerm } from "../../common/types";
 import { useHeadStyles } from "./style";
-import filterAndSort from "./filterAndSort";
+import { filterAndSort } from "../../common/arrayFunctions";
 import SortableHeadCell from "./SortableHeadCell";
 import AccountRow from "./Row";
 import FilterPopover from "./FilterPopover";
@@ -27,8 +27,7 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
   const [ascending, setAscending] = useState(true);
   const [sortKeys, setSortKeys] = useState<Array<keyof Account>>(["firstName"]);
 
-  const [nameFilter, setNameFilter] = useState("");
-  const [accountTypeFilter, setAccountTypeFilter] = useState("");
+  const [filterTerms, setFilterTerms] = useState<Array<FilterTerm>>([]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -43,13 +42,11 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
   ) => {
     setPage(newPage);
   };
-
   const filteredSortedAccounts = filterAndSort(
     accounts,
     sortKeys,
     ascending,
-    nameFilter,
-    accountTypeFilter
+    filterTerms
   );
 
   return (
@@ -94,10 +91,8 @@ const AccountsTable: React.FC<{ accounts: Account[] }> = ({ accounts }) => {
         <Box display="flex" justifyContent="space-between" margin={2}>
           <FilterPopover
             pageSetter={setPage}
-            nameFilter={nameFilter}
-            nameFilterSetter={setNameFilter}
-            accountTypeFilter={accountTypeFilter}
-            accountTypeFilterSetter={setAccountTypeFilter}
+            filterTerms={filterTerms}
+            filterTermsSetter={setFilterTerms}
           />
           <TablePagination
             rowsPerPageOptions={[5, 10, 15]}

@@ -8,12 +8,12 @@ import {
   Collapse,
   IconButton,
   Box,
-  Paper
+  Paper,
 } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-import { Account } from "../../types";
+import { Account } from "../../common/types";
 import { useRowStyles } from "./style";
 
 const AccountRow: React.FC<{ account: Account }> = ({ account }) => {

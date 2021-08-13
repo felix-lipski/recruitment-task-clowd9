@@ -1,7 +1,7 @@
 import { Reducer } from "redux";
 
 import mockAccounts from "../db/mock.json";
-import { StoreState } from "../types";
+import { StoreState } from "../common/types";
 import { FakeGetAccounts, FAKE_GET_ACCOUNTS } from "./actions";
 
 export const initialState: StoreState = {
