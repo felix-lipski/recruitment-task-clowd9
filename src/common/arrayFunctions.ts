@@ -1,4 +1,4 @@
-import { FilterTerm, Sortable } from "./types";
+import { FilterTerm, Sortable, Filter } from "./types";
 
 export const concatWithoutNulls = <T>(keys: Array<keyof T>, obj: T) =>
   keys.reduce(
@@ -50,12 +50,24 @@ export const filterByTerms = <T extends Sortable>(
     );
   }, arr);
 
+export const filterWithExtractors = <T extends Sortable>(
+  filters: Filter<T>[],
+  arr: Array<T>
+) =>
+  filters.reduce((acc, y) => {
+    const extractor = y.extractor;
+    const term: string = String(y.term);
+    return acc.filter((x: T) =>
+      extractor(x).toUpperCase().includes(String(term).toUpperCase())
+    );
+  }, arr);
+
 export const filterAndSort = <T extends Sortable>(
   arr: T[],
   sortKeys: Array<keyof T>,
   ascending: boolean,
-  filterTerms: Array<FilterTerm>
-) => filterByTerms<T>(filterTerms, sortByKeys(sortKeys, ascending, arr));
+  filters: Filter<T>[]
+) => filterWithExtractors<T>(filters, sortByKeys(sortKeys, ascending, arr));
 
 export const compare2ArraysNonRec = <T>(arr1: Array<T>, arr2: Array<T>) =>
   arr1.length === arr2.length &&

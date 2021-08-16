@@ -1,5 +1,4 @@
-export interface Account {
-  [index: string]: string | null | string[] | number;
+export type Account = {
   id: number;
   firstName: string | null;
   lastName: string | null;
@@ -7,7 +6,7 @@ export interface Account {
   accountType: string;
   createDate: string;
   permissions: string[];
-}
+};
 
 export interface StoreState {
   accounts: Account[];
@@ -15,6 +14,14 @@ export interface StoreState {
 
 export interface FilterTerm {
   keys: Array<string>;
+  term: string;
+}
+
+export type Extractor<T> = (obj: T) => string;
+
+export interface Filter<T> {
+  name: string;
+  extractor: Extractor<T>;
   term: string;
 }
 

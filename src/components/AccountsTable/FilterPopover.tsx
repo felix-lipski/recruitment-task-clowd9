@@ -1,42 +1,46 @@
 import { useState } from "react";
 import { TextField, Popover, Button, Typography } from "@material-ui/core";
 
+import { Account, Filter, Extractor } from "../../common/types";
 import { useFilterStyles } from "./style";
-import { FilterTerm } from "../../common/types";
-import { addOrReplaceFilterTerms } from "../../common/arrayFunctions";
 
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 
-const FilterTermInput: React.FC<{
-  keys: Array<string>;
+const FilterInput: React.FC<{
   label: string;
-  filterTerms: Array<FilterTerm>;
   pageSetter: React.Dispatch<React.SetStateAction<number>>;
-  filterTermsSetter: React.Dispatch<React.SetStateAction<Array<FilterTerm>>>;
-}> = ({ keys, label, filterTerms, pageSetter, filterTermsSetter }) => (
+  extractor: (obj: Account) => string;
+  filters: Array<Filter<Account>>;
+  filtersSetter: React.Dispatch<React.SetStateAction<Array<Filter<Account>>>>;
+}> = ({ label, pageSetter, extractor, filters, filtersSetter }) => (
   <TextField
     id={label.toLowerCase() + "-field"}
     label={label}
     variant="outlined"
     onChange={(e) => {
-      filterTermsSetter(
-        addOrReplaceFilterTerms(filterTerms, {
-          keys: keys,
-          term: e.target.value,
-        })
+      const str = e.target.value;
+      const ret = filters.filter((obj) => obj.name !== label);
+      filtersSetter(
+        str
+          ? ret.concat({
+              name: label,
+              extractor: extractor,
+              term: str,
+            })
+          : ret
       );
       pageSetter(0);
     }}
-    value={filterTerms.find((x) => x.keys === keys)}
+    value={filters.find((x) => x.name === label)?.term || ""}
   />
 );
 
 const FilterPopover: React.FC<{
   pageSetter: React.Dispatch<React.SetStateAction<number>>;
-  filterTerms: Array<FilterTerm>;
-  filterTermsSetter: React.Dispatch<React.SetStateAction<Array<FilterTerm>>>;
-}> = ({ pageSetter, filterTerms, filterTermsSetter }) => {
+  filters: Array<Filter<Account>>;
+  filtersSetter: React.Dispatch<React.SetStateAction<Array<Filter<Account>>>>;
+}> = ({ pageSetter, filters, filtersSetter }) => {
   const classes = useFilterStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -51,8 +55,15 @@ const FilterPopover: React.FC<{
   const open = Boolean(anchorEl);
   const id = open ? "filter-popover" : undefined;
 
-  const filtersApplied =
-    filterTerms.filter((x) => x.term.length > 0).length > 0;
+  const AccountFilterInput = (label: string, extractor: Extractor<Account>) => (
+    <FilterInput
+      pageSetter={pageSetter}
+      filters={filters}
+      filtersSetter={filtersSetter}
+      extractor={extractor}
+      label={label}
+    />
+  );
 
   return (
     <>
@@ -62,7 +73,7 @@ const FilterPopover: React.FC<{
         color="primary"
         onClick={handleClick}
       >
-        {filtersApplied ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}{" "}
+        {filters.length > 0 ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}{" "}
         Filter
       </Button>
       <Popover
@@ -81,27 +92,12 @@ const FilterPopover: React.FC<{
       >
         <form className={classes.form} noValidate autoComplete="off">
           <Typography className={classes.typography}>Filter by:</Typography>
-          <FilterTermInput
-            pageSetter={pageSetter}
-            filterTerms={filterTerms}
-            filterTermsSetter={filterTermsSetter}
-            keys={["firstName", "lastName"]}
-            label="Name"
-          />
-          <FilterTermInput
-            pageSetter={pageSetter}
-            filterTerms={filterTerms}
-            filterTermsSetter={filterTermsSetter}
-            keys={["accountType"]}
-            label="Position"
-          />
-          <FilterTermInput
-            pageSetter={pageSetter}
-            filterTerms={filterTerms}
-            filterTermsSetter={filterTermsSetter}
-            keys={["userName"]}
-            label="Username"
-          />
+          {AccountFilterInput("Name", (obj) =>
+            [obj.firstName, obj.lastName].filter((x) => x !== null).join()
+          )}
+          {AccountFilterInput("Position", (obj) => obj.accountType)}
+          {AccountFilterInput("Username", (obj) => obj.userName)}
+          {AccountFilterInput("Permissions", (obj) => obj.permissions.join())}
         </form>
       </Popover>
     </>
